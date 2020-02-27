@@ -83,27 +83,26 @@
 
 
                            <!-- post one -->
+                           @foreach ($allArticle as $item)
+                           @if (!$loop->first)
                            <div class="col-lg-5 pr-md-5 pr-lg-5 no-flex no-flex pl-0 mb-5 pb-3">
-                            @foreach ($allArticle as $item)
-                            @if (!$loop->first)
                             <div class="post_image">
                                     <img class="w-100" src="{{asset('frontEnd/uploads/article')}}/{{$item->photo}}" alt="post_image">
                             </div>
-                            @endif
-                            @endforeach
+
                         </div>
                         <div class="col-lg-7 mb-5 pb-3  no-flex d-flex align-items-center">
-                            @foreach ($allArticle as $item)
-                            @if (!$loop->first)
+                            {{-- @foreach ($allArticle as $item) --}}
+                            {{-- @if (!$loop->first) --}}
                              <div class="post_content">
                                 <h2>{{$item->title}}</h2>
                                 <p>{{$item->articleHint}}</p>
                                 {{-- {!! Str::limit(html_entity_decode($item->article), 400) !!} --}}
                                 <a href="{{url('article/details')}}/{{$item->id}}">সম্পূর্ণ আর্টিকেল পড়ুন</a>
                              </div>
+                            </div>
                             @endif
-                            @endforeach
-                        </div>
+                        @endforeach
 
 
 
