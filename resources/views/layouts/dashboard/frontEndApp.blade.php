@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Invnetory System</title>
+        <title>Bongobondhu Dashboard</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
         <meta content="Coderthemes" name="author" />
@@ -128,16 +128,20 @@
                             <li>
                                 <a ><i class="fi-help"></i><span> Theme Settings </span> <span class="menu-arrow"></span></a>
                                 <ul class="nav-second-level" aria-expanded="false">
+                                    <li><a href="{{route('logosettings')}}">Logo</a></li>
+                                    <li><a href="{{route('firstPageText')}}">First Page Text</a></li>
+                                    <li><a href=" {{route('bannerSettings')}} ">First Page Banner</a></li>
                                     <li><a href=" {{route('articleSettings')}} ">Article</a></li>
-                                    <li><a href=" {{route('bannerSettings')}} ">Banner</a></li>
-                                    {{-- <li><a href="{{route('logosettings')}}">Logo</a></li>
-                                    <li><a href=" {{route('bannerVideo')}} ">Banner Youtube Video</a></li>
-                                    <li><a href=" {{route('aboutSection')}} ">About Section</a></li>
-                                    <li><a href=" {{route('experienceCanada')}} ">experienceCanada</a></li>
-                                    <li><a href=" {{route('experienceworld')}} ">experienceworld</a></li>
-                                    <li><a href=" {{route('partner')}} ">partner</a></li>
-                                    <li><a href=" {{route('contact')}} ">Contact</a></li>
-                                    <li><a href=" {{route('contactForm')}} ">Contact Messages</a></li> --}}
+                                    <li><a href=" {{route('historySettings')}} ">History Page</a></li>
+
+                                    <li><a href=" {{route('mujibHistorydash')}} ">Mujib History</a></li>
+                                    <li><a href=" {{route('mujibLifedash')}} ">Mujib Life</a></li>
+                                    <li><a href=" {{route('mujibSpeechdash')}} ">Mujib Speech</a></li>
+                                    <li><a href=" {{route('mujibPublicationdash')}} ">Mujib Publication</a></li>
+                                    <li><a href=" {{route('knowmoredash')}} ">Mujib Know More</a></li>
+                                    @if (Auth::user()->userType != 1)
+                                    <li><a href=" {{route('allusers')}} ">All Users</a></li>
+                                    @endif
                                 </ul>
                             </li>
 

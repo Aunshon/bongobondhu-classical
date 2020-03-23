@@ -24,7 +24,7 @@
            <div class="row justify-content-between">
                <div class="col-lg-4 col-md-6 col-sm-8 col-9">
                    <div class="logo" id="home_logo">
-                       <img src="{{ asset('frontEnd/uploads/logo') }}/logo.png" alt="logo">
+                       <img src="{{ asset('frontEnd/uploads/logo') }}/{{$logo->logo}}" alt="logo">
 
                    </div>
                    <h2 class="logo_title">বঙ্গবন্ধু</h2>
@@ -36,12 +36,12 @@
            <div class="menu_list">
                <ul>
                    <li><a href="#">আমাদের সম্পর্কে</a></li>
-                   <li><a href="#"> আর্টিকেলকে</a></li>
+                   <li><a href="{{route('readMore')}}"> আর্টিকেলকে</a></li>
                    <li><a href="#">ভিডিও</a></li>
-                   <li><a href="#">ইতিহাসের পাতায় মুজিব</a></li>
-                   <li><a href="#"> সচিত্র জীবনী</a></li>
-                   <li><a href="#">উক্তি</a></li>
-                   <li><a href="#">প্রকাশনা</a></li>
+                   <li><a href="{{route('mujibHistory')}}">ইতিহাসের পাতায় মুজিব</a></li>
+                   <li><a href="{{route('mujibLife')}}"> সচিত্র জীবনী</a></li>
+                   <li><a href="{{route('mujibSpeech')}}">উক্তি</a></li>
+                   <li><a href="{{route('mujibPublication')}}">প্রকাশনা</a></li>
                </ul>
 
            </div>

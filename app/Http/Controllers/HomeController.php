@@ -3,6 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use App\Banner;
+use App\FirstPage;
+use App\History;
+use App\KnowMore;
+use App\Logo;
+use App\MujibHistory;
+use App\MujibLife;
+use App\MujibPublication;
+use App\MujibSpeech;
+use App\User;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
@@ -16,6 +26,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('SiteRes');
     }
 
     /**
@@ -28,15 +39,11 @@ class HomeController extends Controller
         return view('home');
     }
 
-    function bannerSettings()
-    {
 
-        return view('dashboard\bannerSettings');
-    }
     function articleSettings()
     {
         $allArticle = Article::all();
-        return view('dashboard\articleSettings',compact('allArticle'));
+        return view('dashboard.articleSettings',compact('allArticle'));
     }
     function savearticle(Request $request)
     {
@@ -71,6 +78,396 @@ class HomeController extends Controller
     {
         Article::findOrFail($id)->delete();
         return back()->with('greenStatus', 'Deleted 👍');
+    }
+
+
+    // logo change
+    function logosettings()
+    {
+        $allLogo = Logo::all();
+        return view('dashboard.logosettings', compact('allLogo'));
+    }
+    function saveLogo(Request $request)
+    {
+        $request->validate([
+            'logo' => 'required'
+        ]);
+
+        $allLogo = Logo::all();
+        foreach ($allLogo as $value) {
+            $value->activation = 0;
+            $value->save();
+        }
+
+        $lastId = Logo::insertGetId([
+            'activation' => 1
+        ]);
+
+        if ($request->hasFile('logo')) {
+            $photo = $request->logo;
+            $photoName = $lastId . '.' . $photo->getClientOriginalExtension();
+            Image::make($photo)->resize(120, 120)->save(base_path("public/frontEnd/uploads/logo/" . $photoName), 100);
+            // Image::make($photo)->resize(20, 20)->save(base_path("public/frontEnd/img/" . $photoName), 100);
+            Logo::findOrFail($lastId)->update([
+                'logo' => $photoName,
+            ]);
+            return back()->with('greenStatus', 'Added 👍');
+        }
+    }
+
+    function activelogo($id)
+    {
+        $allLogo = Logo::all();
+        foreach ($allLogo as $value) {
+            $value->activation = 0;
+            $value->save();
+        }
+        Logo::findOrFail($id)->update([
+            'activation' => 1,
+        ]);
+
+        return back()->with('greenStatus', 'Logo activated 👍');
+    }
+    function logodelete($id)
+    {
+        $photoName = Logo::findOrFail($id)->logo;
+        unlink(base_path("public/frontEnd/uploads/logo/" . $photoName));
+        Logo::findOrFail($id)->delete();
+
+        return back()->with('greenStatus', 'Deleted 👍');
+    }
+
+
+    function firstPageText()
+    {
+        $firstPage = FirstPage::all();
+        return view('dashboard.firstPageText', compact('firstPage'));
+    }
+    function updateFirstPage(Request $request)
+    {
+        $request->validate([
+            'title',
+            'dis',
+        ]);
+
+        $allLogo = FirstPage::all();
+        foreach ($allLogo as $value) {
+            $value->delete();
+        }
+
+        FirstPage::insert([
+            'title' => $request->title,
+            'dis' => $request->dis,
+        ]);
+
+        return back()->with('greenStatus', 'Updated 👍');
+    }
+
+    function bannerSettings()
+    {
+        $allbanners = Banner::all();
+        return view('dashboard.bannerSettings', compact('allbanners'));
+    }
+
+    function saveBanner(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required'
+        ]);
+
+        // $allLogo = Banner::all();
+        // foreach ($allLogo as $value) {
+        //     $value->activation = 0;
+        //     $value->save();
+        // }
+
+        $lastId = Banner::insertGetId([
+            'activation' => 1
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->photo;
+            $photoName = $lastId . '.' . $photo->getClientOriginalExtension();
+            Image::make($photo)->resize(550, 550)->save(base_path("public/frontEnd/uploads/banner/" . $photoName), 100);
+            // Image::make($photo)->resize(20, 20)->save(base_path("public/frontEnd/img/" . $photoName), 100);
+            Banner::findOrFail($lastId)->update([
+                'photo' => $photoName,
+            ]);
+            return back()->with('greenStatus', 'Added 👍');
+        }
+    }
+
+    function activebanner($id)
+    {
+        // $allLogo = Banner::all();
+        // foreach ($allLogo as $value) {
+        //     $value->activation = 0;
+        //     $value->save();
+        // }
+        Banner::findOrFail($id)->update([
+            'activation' => 1,
+        ]);
+
+        return back()->with('greenStatus', 'Logo activated 👍');
+    }
+    function bannerdelete($id)
+    {
+        $photoName = Banner::findOrFail($id)->photo;
+        unlink(base_path("public/frontEnd/uploads/banner/" . $photoName));
+        Banner::findOrFail($id)->delete();
+
+        return back()->with('greenStatus', 'Deleted 👍');
+    }
+
+    function historySettings()
+    {
+        $allhistory = History::all();
+        return view('dashboard.historySettings', compact('allhistory'));
+    }
+    function saveHistory(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'dis' => 'required',
+            'photo' => 'required'
+        ]);
+        $allLogo = History::all();
+        foreach ($allLogo as $value) {
+            $value->delete();
+        }
+
+        $lastId = History::insertGetId([
+            'title' => $request->title,
+            'dis' => $request->dis
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->photo;
+            $photoName = $lastId . '.' . $photo->getClientOriginalExtension();
+            Image::make($photo)->resize(945, 945)->save(base_path("public/frontEnd/uploads/history/" . $photoName), 100);
+            // Image::make($photo)->resize(20, 20)->save(base_path("public/frontEnd/img/" . $photoName), 100);
+            History::findOrFail($lastId)->update([
+                'photo' => $photoName,
+            ]);
+            return back()->with('greenStatus', 'Saved 👍');
+        }
+    }
+
+
+    function mujibHistorydash()
+    {
+        $mujibHistorydash = MujibHistory::all();
+        return view('dashboard.mujibHistorydash', compact('mujibHistorydash'));
+    }
+    function savemijibhistory(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'dis' => 'required',
+            'photo' => 'required'
+        ]);
+
+
+        $lastId = MujibHistory::insertGetId([
+            'title' => $request->title,
+            'dis' => $request->dis
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->photo;
+            $photoName = $lastId . '.' . $photo->getClientOriginalExtension();
+            Image::make($photo)->resize(945, 945)->save(base_path("public/frontEnd/uploads/mijib_history/" . $photoName), 100);
+            // Image::make($photo)->resize(20, 20)->save(base_path("public/frontEnd/img/" . $photoName), 100);
+            MujibHistory::findOrFail($lastId)->update([
+                'photo' => $photoName,
+            ]);
+            return back()->with('greenStatus', 'Saved 👍');
+        }
+    }
+
+    function mujibLifedash()
+    {
+        $mujibLifedash = MujibLife::all();
+        return view('dashboard.mujibLifedash', compact('mujibLifedash'));
+    }
+    function savemujib_Life(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'dis' => 'required',
+            'photo' => 'required'
+        ]);
+
+
+        $lastId = MujibLife::insertGetId([
+            'title' => $request->title,
+            'dis' => $request->dis
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->photo;
+            $photoName = $lastId . '.' . $photo->getClientOriginalExtension();
+            Image::make($photo)->resize(945, 945)->save(base_path("public/frontEnd/uploads/mujib_Life/" . $photoName), 100);
+            // Image::make($photo)->resize(20, 20)->save(base_path("public/frontEnd/img/" . $photoName), 100);
+            MujibLife::findOrFail($lastId)->update([
+                'photo' => $photoName,
+            ]);
+            return back()->with('greenStatus', 'Saved 👍');
+        }
+    }
+
+    function mujibSpeechdash()
+    {
+        $mujibSpeechdash = MujibSpeech::all();
+        return view('dashboard.mujibSpeechdash', compact('mujibSpeechdash'));
+    }
+    function savemujib_Speech(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'dis' => 'required',
+            'photo' => 'required'
+        ]);
+
+
+        $lastId = MujibSpeech::insertGetId([
+            'title' => $request->title,
+            'dis' => $request->dis
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->photo;
+            $photoName = $lastId . '.' . $photo->getClientOriginalExtension();
+            Image::make($photo)->resize(945, 945)->save(base_path("public/frontEnd/uploads/mujib_Speech/" . $photoName), 100);
+            // Image::make($photo)->resize(20, 20)->save(base_path("public/frontEnd/img/" . $photoName), 100);
+            MujibSpeech::findOrFail($lastId)->update([
+                'photo' => $photoName,
+            ]);
+            return back()->with('greenStatus', 'Saved 👍');
+        }
+    }
+
+    function mujibPublicationdash()
+    {
+        $mujibPublicationdash = MujibPublication::all();
+        return view('dashboard.mujibPublicationdash', compact('mujibPublicationdash'));
+    }
+    function savemujib_Publication(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'dis' => 'required',
+            'photo' => 'required'
+        ]);
+
+
+        $lastId = MujibPublication::insertGetId([
+            'title' => $request->title,
+            'dis' => $request->dis
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->photo;
+            $photoName = $lastId . '.' . $photo->getClientOriginalExtension();
+            Image::make($photo)->resize(945, 945)->save(base_path("public/frontEnd/uploads/mujib_Publication/" . $photoName), 100);
+            // Image::make($photo)->resize(20, 20)->save(base_path("public/frontEnd/img/" . $photoName), 100);
+            MujibPublication::findOrFail($lastId)->update([
+                'photo' => $photoName,
+            ]);
+            return back()->with('greenStatus', 'Saved 👍');
+        }
+    }
+
+
+    function delete_mujibHistorydash($id)
+    {
+        $photoName = MujibHistory::findOrFail($id)->photo;
+        unlink(base_path("public/frontEnd/uploads/mijib_history/" . $photoName));
+        MujibHistory::findOrFail($id)->delete();
+        return back()->with('greenStatus', 'Deleted 👍');
+    }
+    function delete_mujibLifedash($id)
+    {
+        $photoName = MujibLife::findOrFail($id)->photo;
+        unlink(base_path("public/frontEnd/uploads/mujib_Life/" . $photoName));
+        MujibLife::findOrFail($id)->delete();
+        return back()->with('greenStatus', 'Deleted 👍');
+    }
+    function delete_mujibSpeechdash($id)
+    {
+        $photoName = MujibSpeech::findOrFail($id)->photo;
+        unlink(base_path("public/frontEnd/uploads/mujib_Speech/" . $photoName));
+        MujibSpeech::findOrFail($id)->delete();
+        return back()->with('greenStatus', 'Deleted 👍');
+    }
+    function delete_mujibPublicationdash($id)
+    {
+        $photoName = MujibPublication::findOrFail($id)->photo;
+        unlink(base_path("public/frontEnd/uploads/mujib_Publication/" . $photoName));
+        MujibPublication::findOrFail($id)->delete();
+        return back()->with('greenStatus', 'Deleted 👍');
+    }
+
+    function knowmoredash()
+    {
+        $knowMoreDash = KnowMore::all();
+        return view('dashboard.knowMoreDash', compact('knowMoreDash'));
+    }
+    function saveknowmore(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'dis' => 'required',
+            'photo' => 'required'
+        ]);
+
+
+        $lastId = KnowMore::insertGetId([
+            'title' => $request->title,
+            'dis' => $request->dis
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->photo;
+            $photoName = $lastId . '.' . $photo->getClientOriginalExtension();
+            Image::make($photo)->resize(945, 945)->save(base_path("public/frontEnd/uploads/knowMore/" . $photoName), 100);
+            // Image::make($photo)->resize(20, 20)->save(base_path("public/frontEnd/img/" . $photoName), 100);
+            KnowMore::findOrFail($lastId)->update([
+                'photo' => $photoName,
+            ]);
+            return back()->with('greenStatus', 'Saved 👍');
+        }
+    }
+    function deletesaveknowmore($id)
+    {
+        $photoName = KnowMore::findOrFail($id)->photo;
+        unlink(base_path("public/frontEnd/uploads/knowMore/" . $photoName));
+        KnowMore::findOrFail($id)->delete();
+        return back()->with('greenStatus', 'Deleted 👍');
+    }
+    function allusers()
+    {
+        $allusers = User::all();
+        return view('dashboard.allusers', compact('allusers'));
+    }
+    function deactiveuser($id)
+    {
+        User::findOrFail($id)->update([
+            'userActivation' => 0,
+        ]);
+        return back()->with('greenStatus', 'Done 👍');
+    }
+    function activeuser($id)
+    {
+        User::findOrFail($id)->update([
+            'userActivation' => 1,
+        ]);
+        return back()->with('greenStatus', 'Done 👍');
+    }
+    function removeuser($id)
+    {
+        User::findOrFail($id)->delete();
+        return back()->with('greenStatus', 'Done 👍');
     }
 
 
