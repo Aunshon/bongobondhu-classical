@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'UrlRes' => \App\Http\Middleware\UrlResMiddleware::class,
         'SiteRes' => \App\Http\Middleware\SiteResMiddleware::class,
+        'factorchecker' => \App\Http\Middleware\FactorChecker::class,
     ];
 
     /**

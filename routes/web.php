@@ -81,3 +81,9 @@ Route::get('/allusers', 'HomeController@allusers')->name('allusers')->middleware
 Route::get('/deactive/user/{id}', 'HomeController@deactiveuser')->middleware('UrlRes');
 Route::get('/active/user/{id}', 'HomeController@activeuser')->middleware('UrlRes');
 Route::get('/remove/user/{id}', 'HomeController@removeuser')->middleware('UrlRes');
+
+
+Route::get('/2fa', 'PasswordSecurityController@show2faForm');
+Route::post('/generate2faSecret', 'PasswordSecurityController@generate2faSecret')->name('generate2faSecret');
+Route::post('/2fa', 'PasswordSecurityController@enable2fa')->name('enable2fa');
+Route::post('/disable2fa', 'PasswordSecurityController@disable2fa')->name('disable2fa');
